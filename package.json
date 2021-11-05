@@ -8,6 +8,7 @@
     "prod": "cross-env NODE_ENV=production nodemon -r dotenv-safe/config server/index.js"
   },
   "dependencies": {
+    "@babel/register": "^7.16.0",
     "@graphql-tools/schema": "^8.2.0",
     "@graphql-tools/utils": "^8.2.2",
     "@withvoid/make-validation": "^1.0.5",
@@ -47,7 +48,6 @@
     "@babel/plugin-proposal-export-default-from": "^7.14.5",
     "@babel/plugin-transform-runtime": "^7.15.0",
     "@babel/preset-env": "^7.15.0",
-    "@babel/register": "^7.15.3",
     "@babel/runtime": "^7.15.3",
     "cross-env": "^7.0.3",
     "dotenv-safe": "^8.2.0",
