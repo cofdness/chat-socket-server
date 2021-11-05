@@ -98,23 +98,23 @@ app.use('/graphql', authGraphql , graphqlHTTP(req => ({
 // app.use("/delete", deleteRouter);
 
 /** Create HTTP server. */
-function createHttpServer(app){
-  if (protocol === 'https') {
-    const sslkey = fs.readFileSync('./www/keys/ssl-key.pem')
-    const sslcert = fs.readFileSync('./www/keys/ssl-cert.pem')
-    const option = {
-      key: sslkey,
-      cert: sslcert
-    }
-    return https.createServer(option, app)
-  } else {
-    return http.createServer(app)
-  }
-
-}
-
-const server = createHttpServer(app)
-// const server = http.createServer(app)
+// function createHttpServer(app){
+//   if (protocol === 'https') {
+//     const sslkey = fs.readFileSync('./www/keys/ssl-key.pem')
+//     const sslcert = fs.readFileSync('./www/keys/ssl-cert.pem')
+//     const option = {
+//       key: sslkey,
+//       cert: sslcert
+//     }
+//     return https.createServer(option, app)
+//   } else {
+//     return http.createServer(app)
+//   }
+//
+// }
+//
+// const server = createHttpServer(app)
+const server = http.createServer(app)
 
 /** Create socket connection */
 // we switch to graphql subscriptions
