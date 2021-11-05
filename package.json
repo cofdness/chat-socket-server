@@ -3,8 +3,8 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "start": "nodemon server/index.js",
-    "start:server": "node server/index.js",
+    "start": "node server/index.js",
+    "start:dev": "nodemon server/index.js",
     "prod": "cross-env NODE_ENV=production nodemon -r dotenv-safe/config server/index.js"
   },
   "dependencies": {
