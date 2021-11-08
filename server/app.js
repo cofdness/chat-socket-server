@@ -26,7 +26,7 @@ import WebSockets from "./utils/WebSockets.js";
 import authGraphql from "./middlewares/auth-graphql";
 
 // config
-import { ip, port, protocol } from './config'
+import { ip, port, protocol, env } from './config'
 
 //express-graphql
 import {graphqlHTTP} from "express-graphql";
@@ -97,24 +97,24 @@ app.use('/graphql', authGraphql , graphqlHTTP(req => ({
 // app.use("/room", decode, chatRoomRouter);
 // app.use("/delete", deleteRouter);
 
-/** Create HTTP server. */
-// function createHttpServer(app){
-//   if (protocol === 'https') {
-//     const sslkey = fs.readFileSync('./www/keys/ssl-key.pem')
-//     const sslcert = fs.readFileSync('./www/keys/ssl-cert.pem')
-//     const option = {
-//       key: sslkey,
-//       cert: sslcert
-//     }
-//     return https.createServer(option, app)
-//   } else {
-//     return http.createServer(app)
-//   }
-//
-// }
-//
-// const server = createHttpServer(app)
-const server = http.createServer(app)
+/** Create HTTP server. We need https for development */
+function createHttpServer(app){
+  if (env === 'development') {
+    const sslkey = fs.readFileSync('./www/keys/ssl-key.pem')
+    const sslcert = fs.readFileSync('./www/keys/ssl-cert.pem')
+    const option = {
+      key: sslkey,
+      cert: sslcert
+    }
+    return https.createServer(option, app)
+  } else {
+    return http.createServer(app)
+  }
+
+}
+
+const server = createHttpServer(app)
+// const server = http.createServer(app)
 
 /** Create socket connection */
 // we switch to graphql subscriptions

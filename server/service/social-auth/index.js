@@ -3,8 +3,6 @@ import {FACEBOOK_APP_ID, FACEBOOK_APP_SECRET} from '../../config'
 import {server_uri} from "../../helper/host";
 
 export const getFacebookAccessToken = async (code) => {
-  console.log('get facebook access token')
-  console.log(`${server_uri}/auth/facebook/callback`)
   const { data } = await axios({
     url: 'https://graph.facebook.com/oauth/access_token',
     method: 'get',
