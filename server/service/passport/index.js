@@ -40,21 +40,6 @@ export const graphql_auth = () => passport.authenticate('graphql')
 export const master = () => passport.authenticate('master', {session: false})
 
 export const facebook = () => passport.authenticate('facebook', {session: false, scope:['email']})
-export const facebook_redirect = () => async ({query}, res, next) => {
-  if (query.code) {
-    const { access_token } = await getFacebookAccessToken(query.code)
-    const FbUser = await getFacebookUserData(access_token)
-    FbUser.service = 'facebook'
-    FbUser.picture = FbUser.picture.data.url
-    const user = await User.createFromService(FbUser)
-    const accessToken = await user.getJWTToken()
-    res.redirect(`${client_uri}/login/?access_token=${accessToken}`)
-  } else {
-    next(new Error('something wrong when get facebook token'))
-  }
-
-}
-
 
 passport.use('password', new BasicStrategy((email, password, done) => {
   const userSchema = new Schema({ email: schema.tree.email, password: schema.tree.password })

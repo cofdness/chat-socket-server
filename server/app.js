@@ -35,7 +35,8 @@ import schema from './graphql'
 
 //facebook
 import {facebook} from "./service/passport";
-import {facebook_redirect} from "./service/passport";
+import {facebook_redirect} from "./service/social-auth";
+import {getFacebookCode} from "./service/social-auth";
 
 const { execute, subscribe } = require('graphql')
 const ws = require('ws')
@@ -56,7 +57,7 @@ app.use(bodyErrorHandler())
 
 
 //facebook auth
-app.get('/auth/facebook', facebook())
+app.get('/auth/facebook', getFacebookCode)
 app.get('/auth/facebook/callback', facebook_redirect())
 
 //graphql
