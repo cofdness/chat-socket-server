@@ -36,6 +36,8 @@ const config = {
     jwtSecret: requireProcessEnv('JWT_SECRET'),
     FACEBOOK_APP_ID: requireProcessEnv('FACEBOOK_APP_ID'),
     FACEBOOK_APP_SECRET: requireProcessEnv('FACEBOOK_APP_SECRET'),
+    GOOGLE_APP_ID: requireProcessEnv('GOOGLE_APP_ID'),
+    GOOGLE_APP_SECRET: requireProcessEnv('GOOGLE_APP_SECRET'),
     mongo: {
       options: {
         useUnifiedTopology: true,
