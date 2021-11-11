@@ -38,6 +38,8 @@ const config = {
     FACEBOOK_APP_SECRET: requireProcessEnv('FACEBOOK_APP_SECRET'),
     GOOGLE_APP_ID: requireProcessEnv('GOOGLE_APP_ID'),
     GOOGLE_APP_SECRET: requireProcessEnv('GOOGLE_APP_SECRET'),
+    GITHUB_APP_ID: requireProcessEnv('GITHUB_APP_ID'),
+    GITHUB_APP_SECRET: requireProcessEnv('GITHUB_APP_SECRET'),
     mongo: {
       options: {
         useUnifiedTopology: true,

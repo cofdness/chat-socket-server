@@ -1,5 +1,8 @@
 import axios from 'axios'
-import {FACEBOOK_APP_ID, FACEBOOK_APP_SECRET, GOOGLE_APP_ID, GOOGLE_APP_SECRET} from '../../config'
+import {
+  FACEBOOK_APP_ID, FACEBOOK_APP_SECRET,
+  GOOGLE_APP_ID, GOOGLE_APP_SECRET,
+  GITHUB_APP_ID, GITHUB_APP_SECRET } from '../../config'
 import {client_uri, server_uri} from "../../helper/host";
 import * as queryString from "querystring";
 import User from "../../models/User";
@@ -54,7 +57,7 @@ export const facebookRedirect = () => async ({query}, res, next) => {
     const accessToken = await user.getJWTToken()
     res.redirect(`${client_uri}/login/?access_token=${accessToken}`)
   } else {
-    next(new Error('something wrong when get facebook token'))
+    next(new Error('something wrong when get google token'))
   }
 }
 
@@ -74,7 +77,6 @@ export const getGoogleCode = (req, res, next) => {
 }
 
 const getGoogleAccessToken = async (code) => {
-  console.log(code)
   const { data } = await axios({
     url: `https://oauth2.googleapis.com/token`,
     method: 'post',
@@ -106,6 +108,62 @@ export const googleRedirect = () => async ({query}, res, next) => {
     const GgUser = await getGoogleUserData(access_token)
     GgUser.service = 'google'
     const user = await User.createFromService(GgUser)
+    const accessToken = await user.getJWTToken()
+    res.redirect(`${client_uri}/login/?access_token=${accessToken}`)
+  } else {
+    next(new Error('something wrong when get github token'))
+  }
+}
+
+/*
+  Github
+ */
+export const getGithubCode = (req, res, next) => {
+  const stringifiesParams = queryString.stringify({
+    client_id: GITHUB_APP_ID,
+    redirect_uri: `${server_uri}/auth/github/callback`,
+    scope: ['read:user', 'user:email'].join(' '),
+    allow_signup: true,
+  })
+  res.redirect(`https://github.com/login/oauth/authorize?${stringifiesParams}`)
+}
+
+const getGithubAccessToken = async (code) => {
+  const { data } = await axios({
+    url: `https://github.com/login/oauth/access_token`,
+    method: 'post',
+    params: {
+      client_id: GITHUB_APP_ID,
+      client_secret: GITHUB_APP_SECRET,
+      redirect_uri: `${server_uri}/auth/github/callback`,
+      code
+    },
+    headers: {
+      Accept: 'application/json'
+    }
+  })
+  return data
+}
+
+const getGithubUserData = async (accessToken) => {
+  const { data } = await axios ({
+    url: 'https://api.github.com/user',
+    method: 'get',
+    headers: {
+      Authorization: `token ${accessToken}`
+    }
+  })
+  return data
+}
+
+export const githubRedirect = () => async ({query}, res, next) => {
+  if (query.code) {
+    const { access_token } = await getGithubAccessToken(query.code)
+    const GithubUser = await getGithubUserData(access_token)
+    GithubUser.service = 'github'
+    GithubUser.picture = GithubUser.avatar_url
+    GithubUser.name = GithubUser.login
+    const user = await User.createFromService(GithubUser)
     const accessToken = await user.getJWTToken()
     res.redirect(`${client_uri}/login/?access_token=${accessToken}`)
   } else {

@@ -34,7 +34,7 @@ import {useServer} from "graphql-ws/lib/use/ws";
 import schema from './graphql'
 
 //facebook
-import {facebookRedirect, getGoogleCode, googleRedirect} from "./service/social-auth";
+import {facebookRedirect, getGithubCode, getGoogleCode, githubRedirect, googleRedirect} from "./service/social-auth";
 import { getFacebookCode } from "./service/social-auth";
 
 const { execute, subscribe } = require('graphql')
@@ -60,6 +60,8 @@ app.get('/auth/facebook', getFacebookCode)
 app.get('/auth/facebook/callback', facebookRedirect())
 app.get('/auth/google', getGoogleCode)
 app.get('/auth/google/callback', googleRedirect())
+app.get('/auth/github', getGithubCode)
+app.get('/auth/github/callback', githubRedirect())
 
 //graphql
 app.use('/graphql', authGraphql , graphqlHTTP(req => ({
