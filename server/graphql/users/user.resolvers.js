@@ -27,6 +27,7 @@ const userResolvers = {
           throw err
         }
       } else {
+        console.log(context.user)
         return context.user.view(true)
       }
 
