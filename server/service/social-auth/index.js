@@ -55,7 +55,7 @@ export const facebookRedirect = () => async ({query}, res, next) => {
     FbUser.picture = FbUser.picture.data.url
     const user = await User.createFromService(FbUser)
     const accessToken = await user.getJWTToken()
-    res.redirect(`${client_uri}/login/?access_token=${accessToken}`)
+    res.redirect(`${client_uri}/login?access_token=${accessToken}`)
   } else {
     next(new Error('something wrong when get google token'))
   }
@@ -109,7 +109,7 @@ export const googleRedirect = () => async ({query}, res, next) => {
     GgUser.service = 'google'
     const user = await User.createFromService(GgUser)
     const accessToken = await user.getJWTToken()
-    res.redirect(`${client_uri}/login/?access_token=${accessToken}`)
+    res.redirect(`${client_uri}/login?access_token=${accessToken}`)
   } else {
     next(new Error('something wrong when get github token'))
   }
@@ -165,7 +165,7 @@ export const githubRedirect = () => async ({query}, res, next) => {
     GithubUser.name = GithubUser.login
     const user = await User.createFromService(GithubUser)
     const accessToken = await user.getJWTToken()
-    res.redirect(`${client_uri}/login/?access_token=${accessToken}`)
+    res.redirect(`${client_uri}/login?access_token=${accessToken}`)
   } else {
     next(new Error('something wrong when get facebook token'))
   }
