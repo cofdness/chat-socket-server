@@ -21,6 +21,7 @@ const userResolvers = {
       if (args.id) {
         try{
           const user = await userSchema.findById(args.id)
+          console.log(user)
           return user.view(true)
         } catch (err) {
           throw err
