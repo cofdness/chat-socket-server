@@ -2,6 +2,8 @@ import pubsub from "../../utils/pubsub";
 import userSchema, {roles, schema} from "../../models/User";
 import {Schema} from "bodymen";
 import { authCheck, authType } from "../../middlewares/auth-check";
+import jwt from 'jsonwebtoken'
+import { jwtSecret } from '../../config'
 
 const event = {
   newUserEvent: 'new_user_event'
@@ -65,7 +67,6 @@ const userResolvers = {
         authCheck([{type: authType.MASTER_KEY}], context)
       }
       try {
-        console.log(input)
         const user = await userSchema.create(input)
         const token = jwt.sign(user.id, jwtSecret)
         await pubsub.publish(event.newUserEvent, {newUser: {token, user}})
