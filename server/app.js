@@ -8,13 +8,9 @@ import {errorHandler as queryErrorHandler} from 'querymen'
 import {errorHandler as bodyErrorHandler} from 'bodymen'
 import {server_uri} from "./helper/host";
 
-import { Server } from 'socket.io'
-
 // mongo connection
 import "./mongo";
 
-// socket configuration
-import WebSockets from "./utils/WebSockets.js";
 // routes
 // we switch to graphql, so we not use legacy route any more
 // import indexRouter from "./routes/index.js";
@@ -26,7 +22,7 @@ import WebSockets from "./utils/WebSockets.js";
 import authGraphql from "./middlewares/auth-graphql";
 
 // config
-import { ip, port, protocol, env } from './config'
+import { ip, port, env } from './config'
 
 //express-graphql
 import {graphqlHTTP} from "express-graphql";
