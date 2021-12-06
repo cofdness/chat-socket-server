@@ -16,6 +16,7 @@
     "@babel/runtime": "^7.16.3",
     "@graphql-tools/schema": "^8.3.1",
     "@graphql-tools/utils": "^8.5.3",
+    "@sendgrid/mail": "^7.6.0",
     "@withvoid/make-validation": "^1.0.5",
     "axios": "^0.24.0",
     "bcrypt": "^5.0.1",

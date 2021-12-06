@@ -8,6 +8,8 @@ import { jwtSecret } from '../../config'
 const event = {
   newUserEvent: 'new_user_event'
 }
+const SOMETHING_CHANGED_TOPIC = 'somethingChanged';
+
 const userType = {
   admin: 'admin',
   support: 'support',
@@ -26,13 +28,16 @@ const userResolvers = {
           throw err
         }
       } else {
-        return context.user.view(true)
+        const user = await userSchema.findById(context.user.id).populate('friends')
+        user.friends.map((friend => friend.view()));
+        return user.view(true)
       }
 
     },
-    users: (parent, args, context, info) => {
-      authCheck([{type: authType.AUTH}], context)
-      return userSchema.find()
+    users: async (parent, args, context, info) => {
+      // authCheck([{type: authType.AUTH}], context)
+      const users = await userSchema.find();
+      return users.map(user => user.view());
     }
 
   },
@@ -50,7 +55,7 @@ const userResolvers = {
         if (authUser) {
           const token = await user.getJWTToken()
           const view = user.view(true)
-          view.accessToken = {token: token}
+          view.accessToken = {token}
           return view
         } else {
           throw new Error('wrong password')
@@ -69,7 +74,7 @@ const userResolvers = {
       try {
         const user = await userSchema.create(input)
         const token = jwt.sign(user.id, jwtSecret)
-        await pubsub.publish(event.newUserEvent, {newUser: {token, user}})
+        await pubsub.publish(event.newUserEvent, {newUserEvent: user.view()})
         const view = user.view(true)
         view.accessToken = {token: token}
         return view
@@ -96,6 +101,11 @@ const userResolvers = {
       console.log(input)
     }
 
+  },
+  Subscription: {
+    newUserEvent: {
+      subscribe: () => pubsub.asyncIterator(event.newUserEvent)
+    }
   }
 }
 export default userResolvers

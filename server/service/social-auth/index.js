@@ -68,7 +68,10 @@ export const getGoogleCode = (req, res, next) => {
   const stringifiesParams = queryString.stringify({
     client_id: GOOGLE_APP_ID,
     redirect_uri: `${server_uri}/auth/google/callback`,
-    scope: 'https://www.googleapis.com/auth/userinfo.email',
+    scope: [
+        'https://www.googleapis.com/auth/userinfo.email',
+        'https://www.googleapis.com/auth/userinfo.profile'
+    ].join(' '),
     response_type: 'code',
     access_type: 'offline',
     prompt: 'consent'

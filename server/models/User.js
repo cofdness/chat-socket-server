@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 import crypto from "crypto";
 import bcrypt from "bcrypt"
-import { env } from '../config'
+import { env, sendgridKey } from '../config'
 import randToken from 'rand-token'
 import jwt from 'jsonwebtoken'
 import { jwtSecret } from '../config'
@@ -42,7 +42,11 @@ const userSchema = new mongoose.Schema(
       github: String,
       google: String
     },
-    friends: [{type: mongoose.Schema.Types.ObjectId, ref: 'User'}]
+    friends: [{type: mongoose.Schema.Types.ObjectId, ref: 'User'}],
+    verify: {
+      type: Boolean,
+      default: false
+    }
   },
   {
     timestamps: true,
@@ -72,6 +76,23 @@ userSchema.pre('save', async function (next) {
   const rounds = env === 'test' ? 1 : 9
 
   this.password = await bcrypt.hash(this.password, rounds)
+  // const sgMail = require('@sendgrid/mail')
+  // sgMail.setApiKey(sendgridKey)
+  // const msg = {
+  //   from: 'cifef21776@suggerin.com',
+  //   to: this.email,
+  //   subject: 'Sending with SendGrid is Fun',
+  //   text: 'and easy to do anywhere, even with Node.js',
+  //   html: '<strong>and easy to do anywhere, even with Node.js</strong>'
+  // }
+  //
+  // sgMail.send(msg)
+  //     .then(() => {
+  //       console.log('email sent')
+  //     })
+  //     .catch((error) => {
+  //       console.error(error)
+  //     })
 })
 
 userSchema.statics = {
@@ -82,6 +103,7 @@ userSchema.statics = {
         user.services[service] = id
         user.name = name
         user.picture = picture
+        user.verify = true
         return user.save()
       } else {
         const password = randToken.generate(16)

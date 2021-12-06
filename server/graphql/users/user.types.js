@@ -8,7 +8,15 @@ const userTypes = gql`
     picture: String
     role: String
     accessToken: Token
+    friends: UserCompact
   }
+  
+  type UserCompact {
+    id: ID
+    name: String
+    picture: String
+  }
+  
   type Token {
     token: String
   }
@@ -29,7 +37,7 @@ const userTypes = gql`
 
 
   type Query {
-    users: [User]
+    users: [UserCompact]
     user(id: ID): User
   }
   type Mutation {
@@ -37,6 +45,10 @@ const userTypes = gql`
     createUser(input: UserCreate): User
     updateUserPassword(input: UserLogin): String
     deleteUser(input: UserDelete): User
+  }
+  
+  type Subscription {
+    newUserEvent: UserCompact
   }
   `
 export default userTypes
