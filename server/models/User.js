@@ -5,6 +5,8 @@ import { env, sendgridKey } from '../config'
 import randToken from 'rand-token'
 import jwt from 'jsonwebtoken'
 import { jwtSecret } from '../config'
+import pubsub from "../utils/pubsub";
+import {pubSubEvent} from "../graphql/users/user.resolvers";
 
 export const roles = ['admin', 'support', 'consumer']
 
@@ -104,6 +106,7 @@ userSchema.statics = {
         user.name = name
         user.picture = picture
         user.verify = true
+        pubsub.publish(pubSubEvent.newUserEvent, { newUserEvent: user.view()}).then()
         return user.save()
       } else {
         const password = randToken.generate(16)

@@ -5,10 +5,9 @@ import { authCheck, authType } from "../../middlewares/auth-check";
 import jwt from 'jsonwebtoken'
 import { jwtSecret } from '../../config'
 
-const event = {
+export const pubSubEvent = {
   newUserEvent: 'new_user_event'
 }
-const SOMETHING_CHANGED_TOPIC = 'somethingChanged';
 
 const userType = {
   admin: 'admin',
@@ -74,7 +73,7 @@ const userResolvers = {
       try {
         const user = await userSchema.create(input)
         const token = jwt.sign(user.id, jwtSecret)
-        await pubsub.publish(event.newUserEvent, {newUserEvent: user.view()})
+        await pubsub.publish(pubSubEvent.newUserEvent, {newUserEvent: user.view()})
         const view = user.view(true)
         view.accessToken = {token: token}
         return view
@@ -104,7 +103,7 @@ const userResolvers = {
   },
   Subscription: {
     newUserEvent: {
-      subscribe: () => pubsub.asyncIterator(event.newUserEvent)
+      subscribe: () => pubsub.asyncIterator(pubSubEvent.newUserEvent)
     }
   }
 }
