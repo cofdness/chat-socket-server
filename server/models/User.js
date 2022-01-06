@@ -60,14 +60,20 @@ const userSchema = new mongoose.Schema(
  * this will interpolate picture and name
  */
 userSchema.path('email').set(function (email) {
-  if (!this.picture || this.picture.indexOf('https://gravatar.com') === 0) {
-    const hash = crypto.createHash('md5').update(email).digest('hex')
-    this.picture = `https://gravatar.com/avatar/${hash}?=identicon`
-  }
-
   if(!this.name) {
     this.name = email.replace(/^(.+)@.+$/, '$1')
   }
+
+  if (!this.picture ||
+      // this.picture.indexOf('https://gravatar.com')
+      this.picture.indexOf('https://avatars.dicebear.com')
+      === 0) {
+    // const hash = crypto.createHash('md5').update(email).digest('hex')
+    // this.picture = `https://gravatar.com/avatar/${hash}?=identicon`
+    this.picture = `https://avatars.dicebear.com/api/male/${this.name}.svg`
+  }
+
+
   return email
 })
 
