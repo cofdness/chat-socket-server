@@ -1,6 +1,10 @@
 {
   "name": "chat-socket",
   "version": "0.2.0",
+  "author": {
+    "name":"Vu Tran Kim Phung",
+    "email": "vtkp2002dn@gmail.com"
+  },
   "private": true,
   "scripts": {
     "start": "node server/index.js",
