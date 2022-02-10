@@ -2,7 +2,7 @@
 
 ## run dev
 ```bash
-npm start
+npm run start:dev
 ```
 
 ## production
