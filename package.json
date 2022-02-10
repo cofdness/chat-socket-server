@@ -30,7 +30,7 @@
     "bodymen": "^1.1.1",
     "cors": "2.8.5",
     "express": "^4.17.2",
-    "express-graphql": "^0.12.0",
+    "express-graphql": "https://gitpkg.now.sh/cofdness/express-graphql/npmDist?chore/graphql-16",
     "graphql": "^16.2.0",
     "graphql-passport": "^0.6.4",
     "graphql-subscriptions": "^2.0.0",
