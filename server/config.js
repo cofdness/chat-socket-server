@@ -46,7 +46,9 @@ const config = {
         useNewUrlParser: true,
         useCreateIndex: true
       }
-    }
+    },
+    APP_ID: process.env.APPID || null,
+    APP_KEY: process.env.APPKEY || null
   },
   test: { },
   development: {

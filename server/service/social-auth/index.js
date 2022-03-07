@@ -2,11 +2,13 @@ import axios from 'axios'
 import {
   FACEBOOK_APP_ID, FACEBOOK_APP_SECRET,
   GOOGLE_APP_ID, GOOGLE_APP_SECRET,
-  GITHUB_APP_ID, GITHUB_APP_SECRET } from '../../config'
+  GITHUB_APP_ID, GITHUB_APP_SECRET, APP_ID, APP_KEY} from '../../config'
 import {client_uri, server_uri} from "../../helper/host";
 import * as queryString from "querystring";
 import User from "../../models/User";
-
+import FormData from "form-data";
+import * as fs from "fs";
+import {Curl} from "node-libcurl";
 /*
     Facebook
  */
@@ -172,4 +174,72 @@ export const githubRedirect = () => async ({query}, res, next) => {
   } else {
     next(new Error('something wrong when get facebook token'))
   }
+}
+
+export const getHVToken = async (req, res, next) => {
+  try {
+    const { data } = await axios({
+      url: 'https://auth.hyperverge.co/login',
+      method: 'post',
+      data: {
+        "appId": "abe84d",
+        "appKey": "7d2c0d7e1690c216458c",
+        "expiry": 900
+      },
+      headers : {
+        'Content-Type': 'application/json'
+      }
+    })
+    res.json(data)
+  } catch (error) {
+    next(error)
+  }
+}
+
+export const getImageInfo = async (req, res, next) => {
+  var axios = require('axios');
+  var FormData = require('form-data');
+  var fs = require('fs');
+  var data = new FormData();
+  data.append('image', fs.createReadStream('/Users/phungvutrankim/Downloads/abc.jpg'));
+
+  const config = {
+    method: 'post',
+    url: 'https://vnm-docs.hyperverge.co/v2/nationalID',
+    headers: {
+      'appId': 'abe84d',
+      'appKey': '7d2c0d7e1690c216458c',
+      'transactionId': 'zzz',
+      'content-type': 'multipart/form-data;',
+      ...data.getHeaders()
+    },
+    data : data
+  };
+
+  axios(config)
+      .then(function (response) {
+        console.log(JSON.stringify(response.data));
+        res.send(JSON.stringify(response.data));
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+//   console.log('file start')
+//   const file = await fs.createReadStream(imageFile);
+//   console.log('file end')
+//   const curl = new Curl()
+//   curl.setOpt('URL', 'https://vnm-docs.hyperverge.co/v2/nationalID')
+//   curl.setOpt(Curl.option.HTTPHEADER, [`appId: ${APP_ID}`, `appKey: ${APP_KEY}`, 'content-type: multipart/form-data;'])
+//   curl.setOpt(Curl.option.HTTPPOST, [{
+//     name: 'abd.jpg', file: imageFile
+//   }])
+//   curl.on('end', function (statusCode, data, headers) {
+//     console.log(data)
+//     console.log(headers)
+//     this.close();
+//   });
+//   curl.on('error', function (error){
+//     console.log(error)
+//   })
+//   curl.perform();
 }

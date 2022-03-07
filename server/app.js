@@ -7,6 +7,14 @@ import cors from "cors";
 import {errorHandler as queryErrorHandler} from 'querymen'
 import {errorHandler as bodyErrorHandler} from 'bodymen'
 import {server_uri} from "./helper/host";
+import {APP_ID, APP_KEY} from './config'
+import FormData from "form-data";
+
+
+import { curly } from "node-libcurl";
+
+// import {fs} from 'fs'
+import {request} from "express";
 
 // mongo connection
 import "./mongo";
@@ -30,8 +38,9 @@ import {useServer} from "graphql-ws/lib/use/ws";
 import schema from './graphql'
 
 //facebook
-import {facebookRedirect, getGithubCode, getGoogleCode, githubRedirect, googleRedirect} from "./service/social-auth";
+import {facebookRedirect, getGithubCode, getGoogleCode, githubRedirect, googleRedirect, getHVToken, getImageInfo} from "./service/social-auth";
 import { getFacebookCode } from "./service/social-auth";
+import axios from "axios";
 
 const { execute, subscribe } = require('graphql')
 const ws = require('ws')
@@ -58,6 +67,8 @@ app.get('/auth/google', getGoogleCode)
 app.get('/auth/google/callback', googleRedirect())
 app.get('/auth/github', getGithubCode)
 app.get('/auth/github/callback', githubRedirect())
+app.get('/hvtoken', getHVToken)
+app.get('/getimageinfo', getImageInfo)
 
 //graphql
 app.use('/graphql', authGraphql , graphqlHTTP(req => ({
@@ -161,3 +172,65 @@ server.listen({ ip, port }, () => {
   console.log(`GraphQL endpoint: ${server_uri}/graphql`)
   console.log(`GraphQL subscription: ${server_uri}/subscriptions`)
 })
+
+// const options = {
+//     method: "POST",
+//     url: "https://vnm-docs.hyperverge.co/v2/nationalID",
+//     port: 443,
+//     headers: {
+//         "appId": APP_ID,
+//         "appKey": APP_KEY,
+//         'transactionId': 'zzz',
+//         "Content-Type": "multipart/form-data"
+//     },
+//     formData : {
+//         "image" : fs.createReadStream("./images/abc.jpg")
+//     }
+// };
+
+
+// const getImageRes = async () => {
+//     // const { statusCode, data, headers } = await curly.get('http://www.google.com')
+//     // const options = {
+//     //
+//     // }
+//     // // console.log(__dirname)
+//     // const imageFile = `${__dirname}/images/abc.jpg`;
+//     // console.log(imageFile);
+//     //
+//     // const form = new FormData();
+//     // form.append('image', fs.createReadStream(imageFile), 'abc.jpg')
+//
+//     try {
+//         const { data } = await axios({
+//             url: 'https://auth.hyperverge.co/login',
+//             method: 'post',
+//             data: {
+//             "appId": "abe84d",
+//                 "appKey": "7d2c0d7e1690c216458c",
+//                 "expiry": 900
+//         },
+//             headers : {
+//                 'Content-Type': 'application/json'
+//             }
+//         })
+//         console.log(data)
+//     } catch (error) {
+//         console.error(error)
+//     }
+//     // console.log(data)
+//     // return data
+//     // axios.post("https://auth.hyperverge.co/login", form, {
+//     //     headers
+//     // })
+//     //     .then((response) => {
+//     //         console.log(response)
+//     //     }).catch((error) => {
+//     //     console.log(error)
+//     // });
+// };
+//
+// getImageRes()
+
+
+
