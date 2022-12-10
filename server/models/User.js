@@ -72,8 +72,6 @@ userSchema.path('email').set(function (email) {
     // this.picture = `https://gravatar.com/avatar/${hash}?=identicon`
     this.picture = `https://avatars.dicebear.com/api/male/${this.name}.svg`
   }
-
-
   return email
 })
 
